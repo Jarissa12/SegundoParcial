@@ -1,0 +1,72 @@
+@page "/listaVerduras"
+@using System.Linq.Expressions;
+
+
+@inject VerduraBLL VerduraBLL
+@inject VitaminaBLL VitaminaBLL
+
+
+<EditForm Model="listaVerduras">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+        <div class="container">
+            <div class="mb-3">
+                <InputDate class="form-control" @bind-Value="fecha" />
+                <div class="input-group-append col-2">
+                    <button type="button" @onclick="Buscar">
+                        <i class="oi oi-magnifying-glass" /> Buscar
+                    </button>
+                </div>
+
+                <table class="table table-success table-striped">
+
+                    <thead>
+                        <tr>
+                            <th>VerduraId</th>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                        
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Verdura in listaVerduras)
+                        {
+                            <tr>
+                                <td>@Verdura.VerduraId</td>
+                                <td>@Verdura.Fecha</td>
+                                <td>@Verdura.Nombre</td>
+                            
+                                
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+</EditForm>
+
+@code {
+    public string Filtro { get; set; } = "";
+    public Verduras verdura{ get; set; } = new Verduras();
+    public DateTime fecha { get; set; }
+    public List<Verduras> listaVerduras { get; set; } = new List<Verduras>();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        fecha = DateTime.Now;
+    }
+
+    public async Task Buscar()
+    {
+        listaVerduras=  VerduraBLL.GetVerduras(o => true);
+    }
+}
